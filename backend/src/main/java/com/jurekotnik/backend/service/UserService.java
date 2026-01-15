@@ -1,5 +1,6 @@
 package com.jurekotnik.backend.service;
 
+import com.jurekotnik.backend.Exception.UserAlreadyExistsException;
 import com.jurekotnik.backend.dto.RegisterRequest;
 import com.jurekotnik.backend.model.User;
 import com.jurekotnik.backend.repository.UserRepository;
@@ -17,7 +18,7 @@ public class UserService {
 
     public User registerUser(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already taken");
+            throw new UserAlreadyExistsException("Email already taken");
         }
 
         User newUser = new User();
