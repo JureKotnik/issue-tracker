@@ -19,7 +19,7 @@ import { AuthService } from '../../../core/services/auth.service';
     MatFormFieldModule
   ],
   templateUrl: './register.html',
-  styleUrl: './register.css'
+  styleUrl: './register.scss'
 })
 export class RegisterComponent {
   user = {
