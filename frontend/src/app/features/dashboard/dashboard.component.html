@@ -1,0 +1,36 @@
+<div class="dashboard-container">
+  
+  <div class="create-section">
+    <h2>My Projects</h2>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Project Name</mat-label>
+        <input matInput [(ngModel)]="newProject.name">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <input matInput [(ngModel)]="newProject.description">
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" (click)="addProject()">
+        + Add Project
+      </button>
+    </div>
+  </div>
+
+  <div class="project-list">
+    <mat-card *ngFor="let project of projects" class="project-card">
+      <mat-card-header>
+        <mat-card-title>{{ project.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ project.description }}</p>
+        <small>Created: {{ project.createdAt | date }}</small>
+      </mat-card-content>
+    </mat-card>
+
+    <p *ngIf="projects.length === 0" class="empty-text">No projects yet. Create one above!</p>
+  </div>
+
+</div>
