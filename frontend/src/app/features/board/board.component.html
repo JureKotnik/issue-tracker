@@ -1,0 +1,55 @@
+<div class="board-container">
+  
+  <div class="controls">
+    <h3>Add Ticket</h3>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="newTicket.title">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="newTicket.status">
+          <mat-option value="TODO">To Do</mat-option>
+          <mat-option value="IN_PROGRESS">In Progress</mat-option>
+          <mat-option value="DONE">Done</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="addTicket()">Create</button>
+    </div>
+  </div>
+
+  <div class="columns-wrapper">
+    
+    <div class="kanban-column">
+      <h2 class="col-header todo">To Do ({{ todoTickets.length }})</h2>
+      <mat-card *ngFor="let t of todoTickets" class="ticket-card">
+        <mat-card-content>
+          <strong>{{ t.title }}</strong>
+          <p>{{ t.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="kanban-column">
+      <h2 class="col-header progress">In Progress ({{ progressTickets.length }})</h2>
+      <mat-card *ngFor="let t of progressTickets" class="ticket-card">
+        <mat-card-content>
+          <strong>{{ t.title }}</strong>
+          <p>{{ t.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="kanban-column">
+      <h2 class="col-header done">Done ({{ doneTickets.length }})</h2>
+      <mat-card *ngFor="let t of doneTickets" class="ticket-card">
+        <mat-card-content>
+          <strong>{{ t.title }}</strong>
+          <p>{{ t.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </div>
+</div>
