@@ -45,12 +45,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  addProject() {
+addProject() {
     if (!this.newProject.name) return;
 
     this.projectService.createProject(this.newProject).subscribe({
       next: (project) => {
-        this.projects.push(project);
+        this.projects = [...this.projects, project]; 
         this.newProject = { name: '', description: '' };
       },
       error: (err) => alert('Failed to create project')

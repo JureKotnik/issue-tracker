@@ -59,12 +59,17 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  addTicket() {
+addTicket() {
     if (!this.newTicket.title) return;
-
     this.ticketService.createTicket(this.newTicket).subscribe({
-      next: () => {
-        this.loadTickets();
+      next: (createdTicket) => {
+        if (createdTicket.status === 'TODO') {
+          this.todoTickets = [...this.todoTickets, createdTicket];
+        } else if (createdTicket.status === 'IN_PROGRESS') {
+          this.progressTickets = [...this.progressTickets, createdTicket];
+        } else if (createdTicket.status === 'DONE') {
+          this.doneTickets = [...this.doneTickets, createdTicket];
+        }
         this.newTicket.title = '';
         this.newTicket.description = '';
       },
