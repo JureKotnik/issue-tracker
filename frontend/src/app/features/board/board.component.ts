@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { TicketService } from '../../core/services/ticket.service';
+
 
 @Component({
   selector: 'app-board',
@@ -23,14 +24,13 @@ import { TicketService } from '../../core/services/ticket.service';
 })
 export class BoardComponent implements OnInit {
   projectId: string = '';
-  
   todoTickets: any[] = [];
   progressTickets: any[] = [];
   doneTickets: any[] = [];
 
   newTicket = { title: '', description: '', status: 'TODO', projectId: '' };
 
-  constructor(private route: ActivatedRoute, private ticketService: TicketService) {}
+  constructor(private route: ActivatedRoute, private ticketService: TicketService, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.projectId = this.route.snapshot.paramMap.get('id') || '';
@@ -43,18 +43,24 @@ export class BoardComponent implements OnInit {
       this.todoTickets = data.filter(t => t.status === 'TODO');
       this.progressTickets = data.filter(t => t.status === 'IN_PROGRESS');
       this.doneTickets = data.filter(t => t.status === 'DONE');
+      this.cd.detectChanges();
     });
   }
 
   addTicket() {
     if (!this.newTicket.title) return;
-    this.ticketService.createTicket(this.newTicket).subscribe({
-      next: (ticket) => {
-        if (ticket.status === 'TODO') this.todoTickets = [...this.todoTickets, ticket];
-        else if (ticket.status === 'IN_PROGRESS') this.progressTickets = [...this.progressTickets, ticket];
-        else if (ticket.status === 'DONE') this.doneTickets = [...this.doneTickets, ticket];
-        
+this.ticketService.createTicket(this.newTicket).subscribe({
+      next: (createdTicket) => {
+        if (createdTicket.status === 'TODO') {
+          this.todoTickets.push(createdTicket);
+        } else if (createdTicket.status === 'IN_PROGRESS') {
+          this.progressTickets.push(createdTicket);
+        } else if (createdTicket.status === 'DONE') {
+          this.doneTickets.push(createdTicket);
+        }
         this.newTicket.title = '';
+        this.newTicket.description = '';
+        this.cd.detectChanges();
       },
       error: () => alert('Error')
     });

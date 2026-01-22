@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -13,27 +13,20 @@ import { ProjectService } from '../../core/services/project.service';
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatFormFieldModule
+    CommonModule, FormsModule, RouterModule,
+    MatCardModule, MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
   projects: any[] = [];
-  
-  newProject = {
-    name: '',
-    description: ''
-  };
+  newProject = { name: '', description: '' };
 
-  constructor(private projectService: ProjectService) {}
+  constructor(
+    private projectService: ProjectService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadProjects();
@@ -42,16 +35,18 @@ export class DashboardComponent implements OnInit {
   loadProjects() {
     this.projectService.getProjects().subscribe(data => {
       this.projects = data;
+      this.cd.detectChanges();
     });
   }
 
-addProject() {
+  addProject() {
     if (!this.newProject.name) return;
 
     this.projectService.createProject(this.newProject).subscribe({
       next: (project) => {
-        this.projects = [...this.projects, project]; 
+        this.projects.push(project); 
         this.newProject = { name: '', description: '' };
+        this.cd.detectChanges(); 
       },
       error: (err) => alert('Failed to create project')
     });
