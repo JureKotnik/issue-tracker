@@ -17,4 +17,8 @@ export class TicketService {
   createTicket(ticketData: any): Observable<any> {
     return this.http.post(this.apiUrl, ticketData);
   }
+
+  updateTicketStatus(ticketId: string, newStatus: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${ticketId}/status`, newStatus);
+  }
 }

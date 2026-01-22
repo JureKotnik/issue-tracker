@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -13,8 +14,9 @@ import { TicketService } from '../../core/services/ticket.service';
   selector: 'app-board',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatCardModule, 
-    MatButtonModule, MatInputModule, MatFormFieldModule, MatSelectModule
+    CommonModule, FormsModule, DragDropModule,
+    MatCardModule, MatButtonModule, MatInputModule, 
+    MatFormFieldModule, MatSelectModule
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
@@ -26,54 +28,58 @@ export class BoardComponent implements OnInit {
   progressTickets: any[] = [];
   doneTickets: any[] = [];
 
-  newTicket = {
-    title: '',
-    description: '',
-    status: 'TODO',
-    projectId: ''
-  };
+  newTicket = { title: '', description: '', status: 'TODO', projectId: '' };
 
-  constructor(
-    private route: ActivatedRoute,
-    private ticketService: TicketService
-  ) {}
+  constructor(private route: ActivatedRoute, private ticketService: TicketService) {}
 
   ngOnInit() {
     this.projectId = this.route.snapshot.paramMap.get('id') || '';
     this.newTicket.projectId = this.projectId;
-    
     this.loadTickets();
   }
 
   loadTickets() {
     this.ticketService.getTicketsByProject(this.projectId).subscribe(data => {
-      this.todoTickets = [];
-      this.progressTickets = [];
-      this.doneTickets = [];
-
-      data.forEach(ticket => {
-        if (ticket.status === 'TODO') this.todoTickets.push(ticket);
-        else if (ticket.status === 'IN_PROGRESS') this.progressTickets.push(ticket);
-        else if (ticket.status === 'DONE') this.doneTickets.push(ticket);
-      });
+      this.todoTickets = data.filter(t => t.status === 'TODO');
+      this.progressTickets = data.filter(t => t.status === 'IN_PROGRESS');
+      this.doneTickets = data.filter(t => t.status === 'DONE');
     });
   }
 
-addTicket() {
+  addTicket() {
     if (!this.newTicket.title) return;
     this.ticketService.createTicket(this.newTicket).subscribe({
-      next: (createdTicket) => {
-        if (createdTicket.status === 'TODO') {
-          this.todoTickets = [...this.todoTickets, createdTicket];
-        } else if (createdTicket.status === 'IN_PROGRESS') {
-          this.progressTickets = [...this.progressTickets, createdTicket];
-        } else if (createdTicket.status === 'DONE') {
-          this.doneTickets = [...this.doneTickets, createdTicket];
-        }
+      next: (ticket) => {
+        if (ticket.status === 'TODO') this.todoTickets = [...this.todoTickets, ticket];
+        else if (ticket.status === 'IN_PROGRESS') this.progressTickets = [...this.progressTickets, ticket];
+        else if (ticket.status === 'DONE') this.doneTickets = [...this.doneTickets, ticket];
+        
         this.newTicket.title = '';
-        this.newTicket.description = '';
       },
-      error: () => alert('Error creating ticket')
+      error: () => alert('Error')
     });
+  }
+
+  drop(event: CdkDragDrop<any[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+
+      const ticket = event.container.data[event.currentIndex];
+      
+      let newStatus = 'TODO';
+      if (event.container.id === 'progressList') newStatus = 'IN_PROGRESS';
+      if (event.container.id === 'doneList') newStatus = 'DONE';
+
+      this.ticketService.updateTicketStatus(ticket.id, newStatus).subscribe({
+        error: (err) => console.error('Failed to update status', err)
+      });
+    }
   }
 }

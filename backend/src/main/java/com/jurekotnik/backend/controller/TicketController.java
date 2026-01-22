@@ -40,4 +40,13 @@ public class TicketController {
 
         return ticketRepository.save(ticket);
     }
+
+    @PatchMapping("/{id}/status")
+    public Ticket updateTicketStatus(@PathVariable UUID id, @RequestBody String newStatus) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+        ticket.setStatus(com.jurekotnik.backend.model.TicketStatus.valueOf(newStatus));
+        
+        return ticketRepository.save(ticket);
+    }
 }
