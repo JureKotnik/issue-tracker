@@ -46,3 +46,13 @@
 .cdk-drag-placeholder {
   opacity: 0;
 }
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-text {
+  max-width: 85%;
+}

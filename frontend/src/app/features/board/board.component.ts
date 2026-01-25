@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { TicketService } from '../../core/services/ticket.service';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { TicketService } from '../../core/services/ticket.service';
   imports: [
     CommonModule, FormsModule, DragDropModule,
     MatCardModule, MatButtonModule, MatInputModule, 
-    MatFormFieldModule, MatSelectModule
+    MatFormFieldModule, MatSelectModule, MatIconModule
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
@@ -63,6 +64,18 @@ this.ticketService.createTicket(this.newTicket).subscribe({
         this.cd.detectChanges();
       },
       error: () => alert('Error')
+    });
+  }
+
+  deleteTicket(ticket: any) {
+    if(!confirm(`Delete "${ticket.title}"?`)) return;
+
+    this.ticketService.deleteTicket(ticket.id).subscribe(() => {
+      this.todoTickets = this.todoTickets.filter(t => t.id !== ticket.id);
+      this.progressTickets = this.progressTickets.filter(t => t.id !== ticket.id);
+      this.doneTickets = this.doneTickets.filter(t => t.id !== ticket.id);
+      
+      this.cd.detectChanges();
     });
   }
 

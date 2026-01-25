@@ -1,0 +1,13 @@
+<mat-toolbar color="primary">
+  <button mat-button routerLink="/dashboard" class="logo">
+    <mat-icon>assignment</mat-icon>
+    Issue Tracker
+  </button>
+
+  <span class="spacer"></span>
+
+  <button mat-button routerLink="/dashboard">Dashboard</button>
+  <button mat-icon-button (click)="logout()" title="Logout">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>

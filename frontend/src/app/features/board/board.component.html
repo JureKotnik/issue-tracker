@@ -24,9 +24,14 @@
         class="ticket-list">
         
         <mat-card *ngFor="let t of todoTickets" class="ticket-card" cdkDrag>
-          <mat-card-content>
-            <strong>{{ t.title }}</strong>
-            <p>{{ t.description }}</p>
+          <mat-card-content class="card-content">
+            <div class="card-text">
+              <strong>{{ t.title }}</strong>
+              <p>{{ t.description }}</p>
+            </div>
+            <button mat-icon-button color="warn" (click)="deleteTicket(t)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </mat-card-content>
         </mat-card>
 
@@ -44,9 +49,14 @@
         class="ticket-list">
         
         <mat-card *ngFor="let t of progressTickets" class="ticket-card" cdkDrag>
-          <mat-card-content>
-            <strong>{{ t.title }}</strong>
-            <p>{{ t.description }}</p>
+          <mat-card-content class="card-content">
+            <div class="card-text">
+              <strong>{{ t.title }}</strong>
+              <p>{{ t.description }}</p>
+            </div>
+            <button mat-icon-button color="warn" (click)="deleteTicket(t)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </mat-card-content>
         </mat-card>
 
@@ -64,9 +74,14 @@
         class="ticket-list">
         
         <mat-card *ngFor="let t of doneTickets" class="ticket-card" cdkDrag>
-          <mat-card-content>
-            <strong>{{ t.title }}</strong>
-            <p>{{ t.description }}</p>
+          <mat-card-content class="card-content">
+            <div class="card-text">
+              <strong>{{ t.title }}</strong>
+              <p>{{ t.description }}</p>
+            </div>
+            <button mat-icon-button color="warn" (click)="deleteTicket(t)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </mat-card-content>
         </mat-card>
 
