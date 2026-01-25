@@ -49,4 +49,9 @@ public class TicketController {
         
         return ticketRepository.save(ticket);
     }
+    
+    @DeleteMapping("/{id}")
+    public void deleteTicket(@PathVariable UUID id) {
+        ticketRepository.deleteById(id);
+    }
 }
