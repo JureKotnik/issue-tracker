@@ -27,6 +27,9 @@ export class AuthService {
       })
     );
   }
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('user');
+  }
 
   logout() {
     this.currentUser = null;
