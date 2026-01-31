@@ -14,7 +14,7 @@ export class ProjectService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  createProject(project: any): Observable<any> {
-    return this.http.post(this.apiUrl, project);
+  createProject(project: any, userId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}?userId=${userId}`, project);
   }
 }

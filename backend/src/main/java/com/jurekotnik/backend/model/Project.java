@@ -15,5 +15,9 @@ public class Project extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User owner;
     
 }

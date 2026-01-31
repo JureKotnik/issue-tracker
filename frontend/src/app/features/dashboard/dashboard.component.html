@@ -26,10 +26,14 @@
         <mat-card-title>{{ project.name }}</mat-card-title>
       </mat-card-header>
       
-      <mat-card-content>
-        <p>{{ project.description }}</p>
-        <small>Created: {{ project.createdAt | date }}</small>
-      </mat-card-content>
+    <mat-card-content>
+      <p>{{ project.description }}</p>
+      <small>
+        Created by: <strong>{{ project.owner?.fullName || 'Unknown' }}</strong>
+        <br>
+        Date: {{ project.createdAt | date }}
+      </small>
+    </mat-card-content>
 
       <mat-card-actions>
        <a mat-button color="accent" [routerLink]="['/board', project.id]">Open Board</a>

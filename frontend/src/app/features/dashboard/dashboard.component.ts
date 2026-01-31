@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProjectService } from '../../core/services/project.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,6 +26,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private projectService: ProjectService,
+    private authService: AuthService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -42,13 +44,19 @@ export class DashboardComponent implements OnInit {
   addProject() {
     if (!this.newProject.name) return;
 
-    this.projectService.createProject(this.newProject).subscribe({
+    const userId = this.authService.currentUser?.id;
+    if (!userId) {
+      alert('You must be logged in!');
+      return;
+    }
+
+    this.projectService.createProject(this.newProject, userId).subscribe({
       next: (project) => {
-        this.projects.push(project); 
+        this.projects = [...this.projects, project];
         this.newProject = { name: '', description: '' };
-        this.cd.detectChanges(); 
+        this.cd.detectChanges();
       },
-      error: (err) => alert('Failed to create project')
+      error: (err) => alert('Error')
     });
   }
 }

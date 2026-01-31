@@ -19,9 +19,16 @@ public class ProjectController {
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
     }
+    
+    @Autowired
+    private com.jurekotnik.backend.repository.UserRepository userRepository;
 
     @PostMapping
-    public Project createProject(@RequestBody Project project) {
+    public Project createProject(@RequestBody Project project, @RequestParam java.util.UUID userId) {
+        com.jurekotnik.backend.model.User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        project.setOwner(user);
         return projectRepository.save(project);
     }
 }
